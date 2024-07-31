@@ -12,6 +12,7 @@ services:
       retries: 10
 
   app:
+#    image: aluracursos/codechella:latest
     build:
       context: .
     env_file: ./env/app.env
@@ -19,6 +20,16 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    restart: unless-stopped
+    depends_on:
+      - app
 
 volumes:
   mysql-data:
